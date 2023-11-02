@@ -3,7 +3,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
-import java.lang.InterruptedException;
 
 public class PingServer {
     public static void main(String[] args) throws SocketException, InterruptedException, IOException {
@@ -32,39 +31,35 @@ public class PingServer {
         DatagramSocket socket = new DatagramSocket(port);
         System.out.println("Server running...");
 
-        try {
-            while (true) {
-                byte[] buf = new byte[256];
-                DatagramPacket packetreceived = new DatagramPacket(buf, buf.length);
-                socket.receive(packetreceived);
-                String message = new String(packetreceived.getData(), StandardCharsets.UTF_8);
+        while (true) {
+            byte[] buf = new byte[256];
+            DatagramPacket packetreceived = new DatagramPacket(buf, buf.length);
+            socket.receive(packetreceived);
+            String message = new String(packetreceived.getData(), StandardCharsets.UTF_8);
 
-                // get ip address
-                int i = 4;
-                StringBuilder ipAddress = new StringBuilder();
-                for (byte raw : packetreceived.getAddress().getAddress()) {
-                    ipAddress.append(raw & 0xFF);
-                    if (--i > 0) {
-                        ipAddress.append(".");
-                    }
-                }
-
-                if (Math.random() <= losschance) {
-                    System.out.println(ipAddress.toString() + ":"
-                            + Integer.toString(packetreceived.getPort()) + "> " + message + " ACTION: not sent");
-                } else {
-                    timewait = (int) (Math.random() * seed);
-                    Thread.sleep(timewait);
-                    String myresponse = "PONG";
-                    DatagramPacket packetsent = new DatagramPacket(myresponse.getBytes(), myresponse.length(),
-                            packetreceived.getAddress(), packetreceived.getPort());
-                    socket.send(packetsent);
-                    System.out.println(ipAddress.toString() + ":" + Integer.toString(packetreceived.getPort()) + "> "
-                            + message + " ACTION: delayed " + Integer.toString(timewait) + " ms");
+            // get ip address
+            int i = 4;
+            StringBuilder ipAddress = new StringBuilder();
+            for (byte raw : packetreceived.getAddress().getAddress()) {
+                ipAddress.append(raw & 0xFF);
+                if (--i > 0) {
+                    ipAddress.append(".");
                 }
             }
-        } catch (InterruptedException e) {
-            socket.close();
+
+            if (Math.random() <= losschance) {
+                System.out.println(ipAddress.toString() + ":"
+                        + Integer.toString(packetreceived.getPort()) + "> " + message + " ACTION: not sent");
+            } else {
+                timewait = (int) (Math.random() * seed);
+                Thread.sleep(timewait);
+                String myresponse = "PONG";
+                DatagramPacket packetsent = new DatagramPacket(myresponse.getBytes(), myresponse.length(),
+                        packetreceived.getAddress(), packetreceived.getPort());
+                socket.send(packetsent);
+                System.out.println(ipAddress.toString() + ":" + Integer.toString(packetreceived.getPort()) + "> "
+                        + message + " ACTION: delayed " + Integer.toString(timewait) + " ms");
+            }
         }
     }
 }

@@ -2,12 +2,12 @@ package src;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.InterruptedException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.lang.InterruptedException;
 
 public class OccurrencesCounter {
     public static void main(String[] args) throws InterruptedException, IOException {
