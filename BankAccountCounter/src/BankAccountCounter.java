@@ -15,7 +15,7 @@ import com.google.gson.stream.JsonReader;
 public class BankAccountCounter {
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
-            System.out.println("Usage: java -cp ./lib/gson-2.10.1.jar:. BankAccountCounter <number of threads>");
+            System.out.println("Usage: java -cp ./lib/gson-2.10.1.jar:. src.BankAccountCounter <number of threads>");
             return;
         }
         int numthreads;
